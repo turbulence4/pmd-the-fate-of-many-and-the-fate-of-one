@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://dlouulojuft7"]
+
+[ext_resource type="Script" uid="uid://cvy5ovpeld0m8" path="res://scripts/player.gd" id="1_rp718"]
+[ext_resource type="SpriteFrames" uid="uid://bjfpvm3spiheb" path="res://data/sprites/piplup.tres" id="2_yewv4"]
+[ext_resource type="Texture2D" uid="uid://de0j1nn7kvlj2" path="res://assets/sprites/misc/shadowEven.png" id="3_76oj4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yewv4"]
+
+[node name="player" type="CharacterBody2D"]
+script = ExtResource("1_rp718")
+
+[node name="sprites" type="AnimatedSprite2D" parent="."]
+z_index = 2
+sprite_frames = ExtResource("2_yewv4")
+animation = &"idleDown"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_yewv4")
+
+[node name="shadow" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(-1, 8)
+texture = ExtResource("3_76oj4")
+offset = Vector2(0.5, 0)

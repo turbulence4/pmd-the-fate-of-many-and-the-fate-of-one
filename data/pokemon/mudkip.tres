@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SpeciesResource" load_steps=4 format=3 uid="uid://c24byl23j0is1"]
+
+[ext_resource type="Script" uid="uid://dtoasstuc07qe" path="res://scripts/speciesResource.gd" id="1_e51ix"]
+[ext_resource type="SpriteFrames" uid="uid://bjfpvm3spiheb" path="res://data/sprites/piplup.tres" id="2_0en6s"]
+[ext_resource type="Texture2D" uid="uid://dthvf2ph4ymem" path="res://assets/sprites/misc/shadowOdd.png" id="2_415uu"]
+
+[resource]
+script = ExtResource("1_e51ix")
+spriteFrames = ExtResource("2_0en6s")
+name = "Mudkip"
+maxHp = 21
+shadow = ExtResource("2_415uu")
+metadata/_custom_type_script = "uid://dtoasstuc07qe"

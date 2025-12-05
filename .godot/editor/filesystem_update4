@@ -1,0 +1,14 @@
+res://scenes/dungeons/testDungeon.tscn
+res://scripts/speciesResource.gd
+res://data/pokemon/piplup.tres
+res://data/sprites/piplup.tres
+res://data/sprites/mudkip.tres
+res://data/pokemon/mudkip.tres
+res://ideas.gd
+res://scripts/pokemon.gd
+res://scripts/gameManager.gd
+res://scripts/gameState.gd
+res://scenes/characterRenderers/playerRenderer.tscn
+res://scripts/playerRenderer.gd
+res://scenes/characters/player.tscn
+res://scripts/player.gd
