@@ -1,5 +1,6 @@
 @warning_ignore("empty_file")
 #pokemon platinum artstyle (may take awhile but WILL BE WORTH IT)
+#have there be an actual map, dungeons are actually places you can go to
 
 #make it so you can click on a pokemon in your party to see everything about them
 	#name, health, stats, conditions, abilities, moves, etc
