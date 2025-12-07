@@ -1,4 +1,4 @@
 res://scenes/characters/player.tscn
 res://data/sprites/piplup.tres
 res://scripts/player.gd
-res://data/sprites/mudkip.tres
+res://scenes/dungeons/testDungeon.tscn

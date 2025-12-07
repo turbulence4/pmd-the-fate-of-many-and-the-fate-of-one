@@ -214,5 +214,5 @@ tile_set = SubResource("TileSet_e6mun")
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(3, 3)
 
-[node name="player" parent="." instance=ExtResource("2_e6mun")]
-position = Vector2(0, -4)
+[node name="player" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("2_e6mun")]
+camera = NodePath("../Camera2D")

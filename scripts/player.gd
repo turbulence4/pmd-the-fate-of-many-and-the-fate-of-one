@@ -1,31 +1,28 @@
 extends CharacterBody2D
 
 var player = Pokemon.new()
+@export var playerSpecies: Resource
+@export var camera: Camera2D
 const tileSize = Vector2(24, 24)
 
-@export var walkSpeed = 8
-@export var runSpeed = 64
+#in tiles per second
+@export var walkSpeed = 3
+@export var runSpeed = 32
 var currentSpeed = walkSpeed
-var initialPosition = Vector2(0, 0)
+var moveRemainingTicks: int = 0
+
+var initialPosition = Vector2(0, 0) 
 var inputDirection = Vector2(0, 0)
+var lastInputDirection = Vector2(0, 0)
 var isMoving = false
 var amtMovedToNextTile = 0.0
 
 func _ready():
 	setup()
 
-func _physics_process(delta: float) -> void:
-	if !isMoving:
-		processMovement()
-	elif inputDirection != Vector2.ZERO:
-		move(delta)
-	else:
-		isMoving = false
-
-func setup():
-	#this is just a default, make a way to change this
+func setup():	
 	#setup assets
-	player.species = preload("res://data/pokemon/piplup.tres")
+	player.species = playerSpecies
 	player.hp = player.species.maxHp
 	$sprites.sprite_frames = player.species.spriteFrames
 	$shadow.texture = player.species.shadow
@@ -34,27 +31,38 @@ func setup():
 	#setup movement
 	initialPosition = position
 
-func processMovement():
+func _physics_process(delta: float) -> void:
+	if isMoving:
+		lastInputDirection = inputDirection
+	
+	handleAnimations()
+	
 	if Input.is_action_pressed("shift"):
 		currentSpeed = runSpeed
 	else:
 		currentSpeed = walkSpeed
 	
-	inputDirection.x = int(Input.get_action_strength("right") - Input.get_action_strength("left"))
-	inputDirection.y = int(Input.get_action_strength("down") - Input.get_action_strength("up"))
+	if !isMoving:
+		processMovementInput()
+	elif inputDirection != Vector2.ZERO:
+		move(delta)
+	else:
+		isMoving = false
+
+	camera.position = position
+
+func processMovementInput():
+	inputDirection = Vector2.ZERO
 	
-	if inputDirection.x > 0 and $right.is_colliding():
-		inputDirection.x = 0
-	if inputDirection.x < 0 and $left.is_colliding():
-		inputDirection.x = 0
-	if inputDirection.y > 0 and $down.is_colliding():
-		inputDirection.y = 0
-	if inputDirection.y < 0 and $up.is_colliding():
-		inputDirection.y = 0
+	inputDirection.x = int(Input.get_action_strength("right")) - int(Input.get_action_strength("left"))
+	inputDirection.y = int(Input.get_action_strength("down")) - int(Input.get_action_strength("up"))
+	
+	if inputDirection.x != 0 and inputDirection.y != 0:
+		currentSpeed /= sqrt(2)
 	
 	if inputDirection != Vector2.ZERO:
 		initialPosition = position
-		isMoving = true;
+		isMoving = true
 
 func move(delta: float):
 	amtMovedToNextTile += currentSpeed * delta
@@ -64,3 +72,41 @@ func move(delta: float):
 		isMoving = false
 	else:
 		position = initialPosition + (tileSize * inputDirection * amtMovedToNextTile)
+
+func handleAnimations():
+	if isMoving and $sprites.animation_finished:
+		match inputDirection:
+			Vector2(1, 0):
+				$sprites.play("walkRight")
+			Vector2(-1, 0):
+				$sprites.play("walkLeft")
+			Vector2(0, 1):
+				$sprites.play("walkDown")
+			Vector2(0, -1):
+				$sprites.play("walkUp")
+			Vector2(1, 1):
+				$sprites.play("walkDownRight")
+			Vector2(-1, 1):
+				$sprites.play("walkDownLeft")
+			Vector2(1, -1):
+				$sprites.play("walkUpRight")
+			Vector2(-1, -1):
+				$sprites.play("walkUpLeft")
+	elif !isMoving and $sprites.animation_finished:
+		match lastInputDirection:
+			Vector2(1, 0):
+				$sprites.play("idleRight")
+			Vector2(-1, 0):
+				$sprites.play("idleLeft")
+			Vector2(0, 1):
+				$sprites.play("idleDown")
+			Vector2(0, -1):
+				$sprites.play("idleUp")
+			Vector2(1, 1):
+				$sprites.play("idleDownRight")
+			Vector2(-1, 1):
+				$sprites.play("idleDownLeft")
+			Vector2(1, -1):
+				$sprites.play("idleUpRight")
+			Vector2(-1, -1):
+				$sprites.play("idleUpLeft")
