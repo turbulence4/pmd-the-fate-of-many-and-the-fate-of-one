@@ -15,9 +15,7 @@ playerSpecies = ExtResource("2_dyp2m")
 z_index = 2
 position = Vector2(0, -3)
 sprite_frames = ExtResource("2_yewv4")
-animation = &"walkDown"
-frame = 3
-frame_progress = 1.0
+animation = &"walkUpRight"
 
 [node name="shadow" type="Sprite2D" parent="."]
 z_index = 1

@@ -6,7 +6,7 @@ var player = Pokemon.new()
 const tileSize = Vector2(24, 24)
 
 #in tiles per second
-@export var walkSpeed = 3
+@export var walkSpeed = 1.8
 @export var runSpeed = 32
 var currentSpeed = walkSpeed
 var moveRemainingTicks: int = 0
@@ -20,7 +20,7 @@ var amtMovedToNextTile = 0.0
 func _ready():
 	setup()
 
-func setup():	
+func setup():
 	#setup assets
 	player.species = playerSpecies
 	player.hp = player.species.maxHp
@@ -74,7 +74,7 @@ func move(delta: float):
 		position = initialPosition + (tileSize * inputDirection * amtMovedToNextTile)
 
 func handleAnimations():
-	if isMoving and $sprites.animation_finished:
+	if isMoving:
 		match inputDirection:
 			Vector2(1, 0):
 				$sprites.play("walkRight")
@@ -92,7 +92,7 @@ func handleAnimations():
 				$sprites.play("walkUpRight")
 			Vector2(-1, -1):
 				$sprites.play("walkUpLeft")
-	elif !isMoving and $sprites.animation_finished:
+	elif !isMoving:
 		match lastInputDirection:
 			Vector2(1, 0):
 				$sprites.play("idleRight")
