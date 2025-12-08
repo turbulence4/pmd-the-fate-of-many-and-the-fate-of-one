@@ -69,9 +69,8 @@ func continueMovement(delta):
 	var step = inputDirection * currentSpeed * tileSize.x * delta
 
 	'''replace with something like:
-	var collision = move_and_collide(velocity * delta)
-	if collision:
-		isMoving = false'''
+	velocity = step
+	move_and_slide()'''
 	position += step
 
 	# Check if we passed or reached the target tile
