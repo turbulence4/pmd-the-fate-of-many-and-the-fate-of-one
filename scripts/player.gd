@@ -9,11 +9,11 @@ const tileSize = Vector2(24, 24)
 @export var walkSpeed = 1.8
 @export var runSpeed = 32
 var currentSpeed = walkSpeed
-var moveRemainingTicks: int = 0
 
 var initialPosition = Vector2(0, 0) 
 var inputDirection = Vector2(0, 0)
 var lastInputDirection = Vector2(0, 0)
+var targetPos: Vector2
 var isMoving = false
 var amtMovedToNextTile = 0.0
 
@@ -29,9 +29,10 @@ func setup():
 	$shadow.offset = Vector2(player.species.shadowOffset, 0)
 	
 	#setup movement
+	position = position.snapped(tileSize)
 	initialPosition = position
 
-func _physics_process(delta: float) -> void:
+func _process(delta: float) -> void:
 	if isMoving:
 		lastInputDirection = inputDirection
 	
@@ -41,37 +42,37 @@ func _physics_process(delta: float) -> void:
 		currentSpeed = runSpeed
 	else:
 		currentSpeed = walkSpeed
-	
-	if !isMoving:
-		processMovementInput()
-	elif inputDirection != Vector2.ZERO:
-		move(delta)
-	else:
-		isMoving = false
-
-	camera.position = position
-
-func processMovementInput():
-	inputDirection = Vector2.ZERO
-	
-	inputDirection.x = int(Input.get_action_strength("right")) - int(Input.get_action_strength("left"))
-	inputDirection.y = int(Input.get_action_strength("down")) - int(Input.get_action_strength("up"))
-	
 	if inputDirection.x != 0 and inputDirection.y != 0:
 		currentSpeed /= sqrt(2)
 	
-	if inputDirection != Vector2.ZERO:
-		initialPosition = position
-		isMoving = true
-
-func move(delta: float):
-	amtMovedToNextTile += currentSpeed * delta
-	if amtMovedToNextTile >= 1:
-		position = initialPosition + (tileSize * inputDirection)
-		amtMovedToNextTile = 0.0
-		isMoving = false
+	if isMoving:
+		continueMovement(delta)
 	else:
-		position = initialPosition + (tileSize * inputDirection * amtMovedToNextTile)
+		handleInput()
+	
+	camera.position = position
+
+func handleInput():
+	var input = Vector2.ZERO
+	input.x = Input.get_action_strength("right") - Input.get_action_strength("left")
+	input.y = Input.get_action_strength("down") - Input.get_action_strength("up")
+
+	if input != Vector2.ZERO:
+		inputDirection = input#.normalized()
+		startMovement()
+
+func startMovement():
+	isMoving = true
+	targetPos = position + inputDirection * tileSize.x
+
+func continueMovement(delta):
+	var step = inputDirection * currentSpeed * tileSize.x * delta
+	position += step
+
+	# Check if we passed or reached the target tile
+	if inputDirection.dot(targetPos - position) <= 0:
+		position = targetPos
+		isMoving = false
 
 func handleAnimations():
 	if isMoving:
