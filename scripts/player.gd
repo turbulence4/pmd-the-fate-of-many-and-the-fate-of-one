@@ -56,9 +56,11 @@ func handleInput():
 	var input = Vector2.ZERO
 	input.x = Input.get_action_strength("right") - Input.get_action_strength("left")
 	input.y = Input.get_action_strength("down") - Input.get_action_strength("up")
-
-	if input != Vector2.ZERO:
-		inputDirection = input#.normalized()
+	
+	$collision.set_target_position(input * tileSize / 2)
+	
+	if input != Vector2.ZERO and !$collision.is_colliding():
+		inputDirection = input
 		startMovement()
 
 func startMovement():
@@ -69,7 +71,6 @@ func continueMovement(delta):
 	var step = inputDirection * currentSpeed * tileSize.x * delta
 	position += step
 
-	# Check if we passed or reached the target tile
 	if inputDirection.dot(targetPos - position) <= 0:
 		position = targetPos
 		isMoving = false
