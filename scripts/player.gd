@@ -15,6 +15,7 @@ var inputDirection = Vector2(0, 0)
 var lastInputDirection = Vector2(0, 0)
 var targetPos: Vector2
 var isMoving = false
+var isColliding = false
 var amtMovedToNextTile = 0.0
 
 func _ready():
@@ -35,6 +36,11 @@ func setup():
 func _process(delta: float) -> void:
 	if isMoving:
 		lastInputDirection = inputDirection
+	
+	if $collision.is_colliding():
+		isColliding = true
+	else:
+		isColliding = false
 	
 	handleAnimations()
 	
@@ -57,9 +63,11 @@ func handleInput():
 	input.x = Input.get_action_strength("right") - Input.get_action_strength("left")
 	input.y = Input.get_action_strength("down") - Input.get_action_strength("up")
 	
-	$collision.set_target_position(input * tileSize / 2)
+	if input != Vector2.ZERO:
+		$collision.set_target_position(input * tileSize)
+	print($collision.target_position, input, $collision.is_colliding())
 	
-	if input != Vector2.ZERO and !$collision.is_colliding():
+	if input != Vector2.ZERO and !isColliding:
 		inputDirection = input
 		startMovement()
 
@@ -69,10 +77,6 @@ func startMovement():
 
 func continueMovement(delta):
 	var step = inputDirection * currentSpeed * tileSize.x * delta
-
-	'''replace with something like:
-	velocity = step
-	move_and_slide()'''
 	position += step
 
 	if inputDirection.dot(targetPos - position) <= 0:
