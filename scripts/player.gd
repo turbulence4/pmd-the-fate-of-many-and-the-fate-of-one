@@ -69,6 +69,10 @@ func startMovement():
 
 func continueMovement(delta):
 	var step = inputDirection * currentSpeed * tileSize.x * delta
+
+	'''replace with something like:
+	velocity = step
+	move_and_slide()'''
 	position += step
 
 	if inputDirection.dot(targetPos - position) <= 0:
