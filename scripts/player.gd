@@ -10,13 +10,11 @@ const tileSize = Vector2(24, 24)
 @export var runSpeed = 32
 var currentSpeed = walkSpeed
 
-var initialPosition = Vector2(0, 0) 
+
 var inputDirection = Vector2(0, 0)
-var lastInputDirection = Vector2(0, 0)
+var direction = inputDirection
 var targetPos: Vector2
 var isMoving = false
-var isColliding = false
-var amtMovedToNextTile = 0.0
 
 func _ready():
 	setup()
@@ -31,19 +29,8 @@ func setup():
 	
 	#setup movement
 	position = position.snapped(tileSize)
-	initialPosition = position
 
 func _process(delta: float) -> void:
-	if isMoving:
-		lastInputDirection = inputDirection
-	
-	if $collision.is_colliding():
-		isColliding = true
-	else:
-		isColliding = false
-	
-	handleAnimations()
-	
 	if Input.is_action_pressed("shift"):
 		currentSpeed = runSpeed
 	else:
@@ -55,28 +42,38 @@ func _process(delta: float) -> void:
 		continueMovement(delta)
 	else:
 		handleInput()
+		handleCollision(inputDirection)
 	
+	handleAnimations()
 	camera.position = position
 
 func handleInput():
-	var input = Vector2.ZERO
-	input.x = Input.get_action_strength("right") - Input.get_action_strength("left")
-	input.y = Input.get_action_strength("down") - Input.get_action_strength("up")
+	direction.x = Input.get_action_strength("right") - Input.get_action_strength("left")
+	direction.y = Input.get_action_strength("down") - Input.get_action_strength("up")
 	
-	if input != Vector2.ZERO:
-		$collision.set_target_position(input * tileSize)
-	print($collision.target_position, input, $collision.is_colliding())
+	if isMoving:
+		return
 	
-	if input != Vector2.ZERO and !isColliding:
-		inputDirection = input
-		startMovement()
+	inputDirection = Vector2.ZERO
+	inputDirection.x = Input.get_action_strength("right") - Input.get_action_strength("left")
+	inputDirection.y = Input.get_action_strength("down") - Input.get_action_strength("up")
+	
+	if inputDirection != Vector2.ZERO and !handleCollision(inputDirection):
+		startMovement(inputDirection)
 
-func startMovement():
-	isMoving = true
-	targetPos = position + inputDirection * tileSize.x
+func handleCollision(dir: Vector2) -> bool:
+	return test_move(global_transform, dir * tileSize/2)
+
+func startMovement(dir: Vector2):
+	if handleCollision(dir):
+		return
+	
+	if !handleCollision(dir):
+		isMoving = true
+		targetPos = position + inputDirection * tileSize
 
 func continueMovement(delta):
-	var step = inputDirection * currentSpeed * tileSize.x * delta
+	var step = inputDirection * currentSpeed * tileSize * delta
 	position += step
 
 	if inputDirection.dot(targetPos - position) <= 0:
@@ -103,7 +100,7 @@ func handleAnimations():
 			Vector2(-1, -1):
 				$sprites.play("walkUpLeft")
 	elif !isMoving:
-		match lastInputDirection:
+		match direction:
 			Vector2(1, 0):
 				$sprites.play("idleRight")
 			Vector2(-1, 0):

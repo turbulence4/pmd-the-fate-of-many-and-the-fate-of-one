@@ -12,6 +12,14 @@ size = Vector2(24, 24)
 script = ExtResource("1_rp718")
 playerSpecies = ExtResource("2_dyp2m")
 
+[node name="collision" type="RayCast2D" parent="."]
+target_position = Vector2(0, 12)
+hit_from_inside = true
+
+[node name="collisionTest" type="Line2D" parent="collision"]
+points = PackedVector2Array(0, 0)
+width = 3.0
+
 [node name="sprites" type="AnimatedSprite2D" parent="."]
 z_index = 2
 sprite_frames = ExtResource("2_yewv4")
@@ -25,7 +33,3 @@ offset = Vector2(0.5, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_yewv4")
-
-[node name="collision" type="RayCast2D" parent="."]
-target_position = Vector2(0, 12)
-hit_from_inside = true
