@@ -7,7 +7,7 @@ const tileSize = Vector2(24, 24)
 
 #in tiles per second
 @export var walkSpeed = 1.8
-@export var runSpeed = 64
+@export var runSpeed = 16
 var currentSpeed = walkSpeed
 
 var inputDirection = Vector2(0, 0)
@@ -39,9 +39,9 @@ func stateManagement():
 		states.idle:
 			pass
 		states.walking:
-			pass
+			$sprites.speed_scale = 1
 		states.running:
-			pass
+			$sprites.speed_scale = 2
 
 func _process(delta: float) -> void:
 	stateManagement()
@@ -50,8 +50,6 @@ func _process(delta: float) -> void:
 		currentSpeed = runSpeed
 	elif playerState == states.walking:
 		currentSpeed = walkSpeed
-	
-	print(playerState, inputDirection, direction)
 	
 	handleAnimations()
 	
@@ -97,6 +95,7 @@ func continueMovement(delta):
 func handleCollision(dir: Vector2) -> bool:
 	return test_move(global_transform, dir * tileSize/2)
 
+#maybe convert this to an animation tree at some point
 func handleAnimations():
 	if playerState in [states.walking, states.running]:
 		match direction:

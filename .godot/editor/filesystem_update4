@@ -6,3 +6,4 @@ res://scenes/dungeons/testDungeon.tscn
 res://data/pokemon/mudkip.tres
 res://scripts/speciesResource.gd
 res://scripts/pokemon.gd
+res://ideas.gd
