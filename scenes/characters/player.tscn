@@ -16,10 +16,6 @@ playerSpecies = ExtResource("2_dyp2m")
 target_position = Vector2(0, 12)
 hit_from_inside = true
 
-[node name="collisionTest" type="Line2D" parent="collision"]
-points = PackedVector2Array(0, 0)
-width = 3.0
-
 [node name="sprites" type="AnimatedSprite2D" parent="."]
 z_index = 2
 sprite_frames = ExtResource("2_yewv4")

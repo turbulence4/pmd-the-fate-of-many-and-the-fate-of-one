@@ -6,3 +6,4 @@ class_name SpeciesResource extends Resource
 
 @export var shadow: Texture
 @export var shadowOffset: float
+@export var spriteOffset: int

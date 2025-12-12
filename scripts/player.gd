@@ -7,14 +7,15 @@ const tileSize = Vector2(24, 24)
 
 #in tiles per second
 @export var walkSpeed = 1.8
-@export var runSpeed = 32
+@export var runSpeed = 64
 var currentSpeed = walkSpeed
 
-
 var inputDirection = Vector2(0, 0)
-var direction = inputDirection
+var direction = Vector2(0, 1)
 var targetPos: Vector2
-var isMoving = false
+
+enum states {idle, walking, running}
+var playerState: states = states.idle
 
 func _ready():
 	setup()
@@ -24,65 +25,81 @@ func setup():
 	player.species = playerSpecies
 	player.hp = player.species.maxHp
 	$sprites.sprite_frames = player.species.spriteFrames
+	$sprites.position = Vector2(position.x, player.species.spriteOffset)
 	$shadow.texture = player.species.shadow
 	$shadow.offset = Vector2(player.species.shadowOffset, 0)
 	
 	#setup movement
 	position = position.snapped(tileSize)
+	playerState = states.idle
+
+#does nothing atm
+func stateManagement():
+	match playerState:
+		states.idle:
+			pass
+		states.walking:
+			pass
+		states.running:
+			pass
 
 func _process(delta: float) -> void:
-	if Input.is_action_pressed("shift"):
-		currentSpeed = runSpeed
-	else:
-		currentSpeed = walkSpeed
-	if inputDirection.x != 0 and inputDirection.y != 0:
-		currentSpeed /= sqrt(2)
+	stateManagement()
 	
-	if isMoving:
-		continueMovement(delta)
-	else:
-		handleInput()
-		handleCollision(inputDirection)
+	if playerState == states.running:
+		currentSpeed = runSpeed
+	elif playerState == states.walking:
+		currentSpeed = walkSpeed
+	
+	print(playerState, inputDirection, direction)
 	
 	handleAnimations()
+	
+	if playerState in [states.walking, states.running]:
+		continueMovement(delta)
+	handleInput()
+	
 	camera.position = position
 
 func handleInput():
-	direction.x = Input.get_action_strength("right") - Input.get_action_strength("left")
-	direction.y = Input.get_action_strength("down") - Input.get_action_strength("up")
-	
-	if isMoving:
-		return
-	
-	inputDirection = Vector2.ZERO
 	inputDirection.x = Input.get_action_strength("right") - Input.get_action_strength("left")
 	inputDirection.y = Input.get_action_strength("down") - Input.get_action_strength("up")
 	
+	if playerState in [states.walking, states.running]:
+		return
+	
+	if inputDirection != Vector2.ZERO:
+		direction.x = inputDirection.x
+		direction.y = inputDirection.y
+	
+	if inputDirection.x != 0 and inputDirection.y != 0:
+		currentSpeed /= sqrt(2)
+	
 	if inputDirection != Vector2.ZERO and !handleCollision(inputDirection):
-		startMovement(inputDirection)
+		if Input.is_action_pressed("shift"):
+			playerState = states.running
+		else:
+			playerState = states.walking
+		startMovement(direction)
+
+func startMovement(dir: Vector2):
+	direction = dir
+	targetPos = position + dir * tileSize
+
+func continueMovement(delta):
+	var step = direction * currentSpeed * tileSize * delta
+	position += step
+	
+	if direction.dot(targetPos - position) <= 0:
+		position = targetPos
+		playerState = states.idle
 
 func handleCollision(dir: Vector2) -> bool:
 	return test_move(global_transform, dir * tileSize/2)
 
-func startMovement(dir: Vector2):
-	if handleCollision(dir):
-		return
-	
-	if !handleCollision(dir):
-		isMoving = true
-		targetPos = position + inputDirection * tileSize
-
-func continueMovement(delta):
-	var step = inputDirection * currentSpeed * tileSize * delta
-	position += step
-
-	if inputDirection.dot(targetPos - position) <= 0:
-		position = targetPos
-		isMoving = false
-
 func handleAnimations():
-	if isMoving:
-		match inputDirection:
+	if playerState in [states.walking, states.running]:
+		match direction:
 			Vector2(1, 0):
 				$sprites.play("walkRight")
 			Vector2(-1, 0):
@@ -99,7 +116,7 @@ func handleAnimations():
 				$sprites.play("walkUpRight")
 			Vector2(-1, -1):
 				$sprites.play("walkUpLeft")
-	elif !isMoving:
+	elif playerState == states.idle:
 		match direction:
 			Vector2(1, 0):
 				$sprites.play("idleRight")

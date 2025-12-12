@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://3dfnuq8qi0pi"]
+[gd_scene load_steps=6 format=4 uid="uid://3dfnuq8qi0pi"]
 
 [ext_resource type="Texture2D" uid="uid://cws85pkil2wtf" path="res://assets/tilesets/tileset_mtsteel.png" id="1_xuowo"]
 [ext_resource type="PackedScene" uid="uid://dlouulojuft7" path="res://scenes/characters/player.tscn" id="2_e6mun"]
+[ext_resource type="Resource" uid="uid://c24byl23j0is1" path="res://data/pokemon/mudkip.tres" id="3_7y7ol"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xuowo"]
 texture = ExtResource("1_xuowo")
@@ -215,4 +216,5 @@ tile_set = SubResource("TileSet_e6mun")
 zoom = Vector2(3, 3)
 
 [node name="player" parent="." node_paths=PackedStringArray("camera") instance=ExtResource("2_e6mun")]
+playerSpecies = ExtResource("3_7y7ol")
 camera = NodePath("../Camera2D")
