@@ -1,9 +1,5 @@
-res://scenes/characters/player.tscn
+res://scenes/3d/player3d.tscn
 res://data/sprites/piplup.tres
-res://scripts/player.gd
 res://data/sprites/mudkip.tres
-res://scenes/dungeons/testDungeon.tscn
+res://scripts/player3d.gd
 res://data/pokemon/mudkip.tres
-res://scripts/speciesResource.gd
-res://scripts/pokemon.gd
-res://ideas.gd
