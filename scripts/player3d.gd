@@ -4,7 +4,6 @@ var player = Pokemon.new()
 @export var playerSpecies: Resource
 const tileSize = Vector2(24, 24)
 
-#in tiles per second
 @export var walkSpeed = 4
 @export var runSpeed = 16
 var currentSpeed = walkSpeed
@@ -23,11 +22,9 @@ func setup():
 	player.species = playerSpecies
 	player.hp = player.species.maxHp
 	$sprites.sprite_frames = player.species.spriteFrames
+	$sprites.offset = player.species.spriteOffset
 	$shadow.texture = player.species.shadow
-	#fix: $shadow.position = Vector3(0, 0, player.species.shadowOffset)
-	
-	#move this to process once i implement camera movement
-	spriteCameraSync()
+	$shadow.offset = player.species.shadowOffset
 	
 	#setup movement
 	playerState = states.idle
@@ -41,19 +38,19 @@ func stateManagement():
 		states.running:
 			$sprites.speed_scale = 2
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	stateManagement()
+	handleAnimations()
 	
 	if playerState == states.running:
 		currentSpeed = runSpeed
 	elif playerState == states.walking:
 		currentSpeed = walkSpeed
-	
-	handleAnimations()
-	
-	handleInput(delta)
 
-func handleInput(delta):
+func _physics_process(delta: float) -> void:
+	handleMovementInput(delta)
+
+func handleMovementInput(delta):
 	inputDirection.x = Input.get_action_strength("right") - Input.get_action_strength("left")
 	inputDirection.z = Input.get_action_strength("down") - Input.get_action_strength("up")
 	
@@ -76,16 +73,8 @@ func handleInput(delta):
 func move(dir: Vector3, delta):
 	position += dir * currentSpeed * delta
 
-func spriteCameraSync():
-	#wow i haven't used this formula since middle school lmao
-	var adjacent = sqrt(pow($camera.position.x - position.x, 2) + pow($camera.position.z - position.z, 2))
-	var opposite = $camera.position.y - position.y
-	#will need to fix accounting for the camera's rotation once i add the ability to move it
-	var theta = abs(atan(opposite / adjacent) + $camera.rotation.x)
-	$sprites.rotation.x = -theta
-	#$shadow.rotation.x = -theta
-
 #maybe convert this to an animation tree at some point
+#wow this is fucking awful
 func handleAnimations():
 	if playerState in [states.walking, states.running]:
 		match inputDirection:

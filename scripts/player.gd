@@ -27,7 +27,7 @@ func setup():
 	$sprites.sprite_frames = player.species.spriteFrames
 	$sprites.position = Vector2(position.x, player.species.spriteOffset)
 	$shadow.texture = player.species.shadow
-	$shadow.offset = Vector2(player.species.shadowOffset, 0)
+	$shadow.offset = player.species.shadowOffset
 	
 	#setup movement
 	position = position.snapped(tileSize)

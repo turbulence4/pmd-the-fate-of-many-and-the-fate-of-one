@@ -1,9 +1,11 @@
 class_name SpeciesResource extends Resource
 
-@export var spriteFrames: SpriteFrames
+#basic info
 @export var name: String
 @export var maxHp: int
 
+#appearance
+@export var spriteFrames: SpriteFrames
+@export var spriteOffset: Vector2
 @export var shadow: Texture
-@export var shadowOffset: float
-@export var spriteOffset: int
+@export var shadowOffset: Vector2

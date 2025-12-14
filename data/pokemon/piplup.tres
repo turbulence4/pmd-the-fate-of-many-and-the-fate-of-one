@@ -6,9 +6,9 @@
 
 [resource]
 script = ExtResource("1_qxi4e")
-spriteFrames = ExtResource("2_ik3gr")
 name = "Piplup"
 maxHp = 21
+spriteFrames = ExtResource("2_ik3gr")
+spriteOffset = Vector2(0.5, 7)
 shadow = ExtResource("2_e1ms5")
-shadowOffset = 0.5
 metadata/_custom_type_script = "uid://dtoasstuc07qe"

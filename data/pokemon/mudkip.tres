@@ -6,9 +6,9 @@
 
 [resource]
 script = ExtResource("1_e51ix")
-spriteFrames = ExtResource("3_0en6s")
 name = "Mudkip"
 maxHp = 21
+spriteFrames = ExtResource("3_0en6s")
+spriteOffset = Vector2(0.5, 8)
 shadow = ExtResource("2_415uu")
-spriteOffset = -1
 metadata/_custom_type_script = "uid://dtoasstuc07qe"
