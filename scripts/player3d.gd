@@ -1,3 +1,4 @@
+#probably split this into multiple scripts at some point
 extends CharacterBody3D
 
 var player = Pokemon.new()
@@ -8,10 +9,11 @@ const tileSize = Vector2(24, 24)
 @export var runSpeed = 16
 var currentSpeed = walkSpeed
 
-var inputDirection = Vector3(0, 0, 0)
+var inputDirection = Vector3.ZERO
 var direction = Vector3(0, 0, 1)
+var cameraInput = Vector2.ZERO
 
-enum states {idle, walking, running}
+enum states {idle, walking, running, falling}
 var playerState: states = states.idle
 
 func _ready():
@@ -32,7 +34,7 @@ func setup():
 func stateManagement():
 	match playerState:
 		states.idle:
-			pass
+			$sprites.frame = 0
 		states.walking:
 			$sprites.speed_scale = 1
 		states.running:
@@ -48,9 +50,15 @@ func _process(_delta: float) -> void:
 		currentSpeed = walkSpeed
 
 func _physics_process(delta: float) -> void:
-	handleMovementInput(delta)
+	handleMovementInput()
+	handleCameraSmooth(delta)
+	move(delta)
 
-func handleMovementInput(delta):
+#tutorial: https://www.youtube.com/watch?v=yVde3I3K7oo, timestamp: 13:42
+func handleCameraSmooth(_delta):
+	pass
+
+func handleMovementInput():
 	inputDirection.x = Input.get_action_strength("right") - Input.get_action_strength("left")
 	inputDirection.z = Input.get_action_strength("down") - Input.get_action_strength("up")
 	
@@ -66,14 +74,23 @@ func handleMovementInput(delta):
 			playerState = states.running
 		else:
 			playerState = states.walking
-		move(inputDirection, delta)	
 	else:
 		playerState = states.idle
 
-func move(dir: Vector3, delta):
-	position += dir * currentSpeed * delta
+func move(delta):
+	velocity.x = inputDirection.x * currentSpeed * delta * 100
+	velocity.z = inputDirection.z * currentSpeed * delta * 100
+	velocity.y -= 9.81 * delta
+	
+	if(velocity.y < -1):
+		playerState = states.falling
+	
+	if is_on_floor():
+		velocity.y = 0
+	
+	move_and_slide()
 
-#maybe convert this to an animation tree at some point
+#IMSTUPID: maybe convert this to an animation tree at some point
 #wow this is fucking awful
 func handleAnimations():
 	if playerState in [states.walking, states.running]:
@@ -112,3 +129,37 @@ func handleAnimations():
 				$sprites.play("idleUpRight")
 			Vector3(-1, 0, -1):
 				$sprites.play("idleUpLeft")
+	elif playerState == states.falling:
+		match direction:
+			Vector3(1, 0, 0):
+				$sprites.play("idleRight")
+				$sprites.frame = 2
+				$sprites.pause()
+			Vector3(-1, 0, 0):
+				$sprites.play("idleLeft")
+				$sprites.frame = 2
+				$sprites.pause()
+			Vector3(0, 0, 1):
+				$sprites.play("idleDown")
+				$sprites.frame = 2
+				$sprites.pause()
+			Vector3(0, 0, -1):
+				$sprites.play("idleUp")
+				$sprites.frame = 2
+				$sprites.pause()
+			Vector3(1, 0, 1):
+				$sprites.play("idleDownRight")
+				$sprites.frame = 2
+				$sprites.pause()
+			Vector3(-1, 0, 1):
+				$sprites.play("idleDownLeft")
+				$sprites.frame = 2
+				$sprites.pause()
+			Vector3(1, 0, -1):
+				$sprites.play("idleUpRight")
+				$sprites.frame = 2
+				$sprites.pause()
+			Vector3(-1, 0, -1):
+				$sprites.play("idleUpLeft")
+				$sprites.frame = 2
+				$sprites.pause()
