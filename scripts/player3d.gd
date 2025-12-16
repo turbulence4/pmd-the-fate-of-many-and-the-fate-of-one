@@ -1,6 +1,8 @@
 #probably split this into multiple scripts at some point
 extends CharacterBody3D
 
+#TODO: https://www.youtube.com/watch?v=9GCinm040RA
+
 var player = Pokemon.new()
 @export var playerSpecies: Resource
 const tileSize = Vector2(24, 24)
@@ -51,12 +53,11 @@ func _process(_delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	handleMovementInput()
-	handleCameraSmooth(delta)
+	handleCameraSmooth()
 	move(delta)
 
-#tutorial: https://www.youtube.com/watch?v=yVde3I3K7oo, timestamp: 13:42
-func handleCameraSmooth(_delta):
-	pass
+func handleCameraSmooth():
+	$cameraManager.position = lerp($cameraManager.position, position, 0.15)
 
 func handleMovementInput():
 	inputDirection.x = Input.get_action_strength("right") - Input.get_action_strength("left")
