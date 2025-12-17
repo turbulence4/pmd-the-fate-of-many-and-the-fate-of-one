@@ -1,10 +1,9 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1765842430
+::res://::1765929972
 export_presets.cfg::TextFile::-1::1765244167::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::8128411970345245014::1764811940::1764811946::1::::<><><>0<>0<>dd15f5b4bdc2e9e93129a249d12fc70a<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 ideas.gd::GDScript::1702469590749768052::1765679726::0::1::::<>RefCounted<><>0<>0<><>::
-::res://assets/::1764812346
-::res://assets/shaders/::0
+::res://assets/::1765845964
 ::res://assets/sprites/::1764812243
 ::res://assets/sprites/misc/::1765592007
 shadowEven.png::CompressedTexture2D::7492220457413497217::1764730890::1764812384::1::::<><><>0<>0<>e6b6a8434ebf81bb5d22ff65ca1cba3c<>res://.godot/imported/shadowEven.png-9c664838410f548ec16ca8c471eee8dc.ctex::
@@ -235,9 +234,9 @@ piplup.tres::SpriteFrames::3029391096142121877::1765843970::0::1::::<><><>0<>0<>
 player.tscn::PackedScene::234161508094350058::1765574357::0::1::::<><><>0<>0<><>::uid://cvy5ovpeld0m8::::res://scripts/player.gd<>uid://cd8v06rbvry08::::res://data/pokemon/piplup.tres<>uid://bjfpvm3spiheb::::res://data/sprites/piplup.tres<>uid://de0j1nn7kvlj2::::res://assets/sprites/misc/shadowEven.png
 ::res://scenes/2d/dungeons/::1765676676
 testDungeon.tscn::PackedScene::1971808632116649802::1765676676::0::1::::<><><>0<>0<><>::uid://cws85pkil2wtf::::res://assets/tilesets/tileset_mtsteel.png<>uid://dlouulojuft7::::res://scenes/2d/characters/player.tscn<>uid://c24byl23j0is1::::res://data/pokemon/mudkip.tres
-::res://scenes/3d/::1765845683
+::res://scenes/3d/::1765846550
 3dTest.tscn::PackedScene::8183214976605350945::1765845116::0::1::::<><><>0<>0<><>::uid://dpghh18ufkaiw::::res://scenes/3d/player3d.tscn
-player3d.tscn::PackedScene::8224919909182280070::1765845683::0::1::::<><><>0<>0<><>::uid://b28bs6tmgldy8::::res://scripts/player3d.gd<>uid://c24byl23j0is1::::res://data/pokemon/mudkip.tres<>uid://qjvo1cg7whwr::::res://data/sprites/mudkip.tres<>uid://dthvf2ph4ymem::::res://assets/sprites/misc/shadowOdd.png
+player3d.tscn::PackedScene::8224919909182280070::1765846550::0::1::::<><><>0<>0<><>::uid://b28bs6tmgldy8::::res://scripts/player3d.gd<>uid://c24byl23j0is1::::res://data/pokemon/mudkip.tres<>uid://qjvo1cg7whwr::::res://data/sprites/mudkip.tres<>uid://dthvf2ph4ymem::::res://assets/sprites/misc/shadowOdd.png
 ::res://scripts/::1765845021
 gameManager.gd::GDScript::6177025561187849534::1764897860::0::1::::GameManager<>Node<><>0<>0<><>::
 gameState.gd::GDScript::8712160873948063531::1764894411::0::1::::GameState<>RefCounted<><>0<>0<><>::

@@ -7,15 +7,18 @@ var player = Pokemon.new()
 @export var playerSpecies: Resource
 const tileSize = Vector2(24, 24)
 
-@export var walkSpeed = 4
-@export var runSpeed = 16
+@export var walkSpeed = 2
+@export var runSpeed = 5
+@export var jumpForce = 4
 var currentSpeed = walkSpeed
+var walkDiag = walkSpeed / sqrt(2)
+var runDiag = runSpeed / sqrt(2)
 
 var inputDirection = Vector3.ZERO
 var direction = Vector3(0, 0, 1)
 var cameraInput = Vector2.ZERO
 
-enum states {idle, walking, running, falling}
+enum states {idle, walking, running, jumping, falling}
 var playerState: states = states.idle
 
 func _ready():
@@ -60,34 +63,54 @@ func handleCameraSmooth():
 	$cameraManager.position = lerp($cameraManager.position, position, 0.15)
 
 func handleMovementInput():
+	#actual input
 	inputDirection.x = Input.get_action_strength("right") - Input.get_action_strength("left")
+	inputDirection.y = Input.get_action_strength("jump")
 	inputDirection.z = Input.get_action_strength("down") - Input.get_action_strength("up")
 	
-	if inputDirection != Vector3.ZERO:
+	#set direction for animation
+	if inputDirection.x != 0 or inputDirection.z != 0:
 		direction.x = inputDirection.x
 		direction.z = inputDirection.z
 	
+	#prevent speeding up when diagonal
 	if inputDirection.x != 0 and inputDirection.z != 0:
-		currentSpeed /= sqrt(2)
+		if playerState == states.walking:
+			currentSpeed = walkDiag
+		elif playerState == states.running:
+			currentSpeed = runDiag
 	
-	if inputDirection != Vector3.ZERO:
+	#state handling
+	if inputDirection.x != 0 or inputDirection.z != 0:
 		if Input.is_action_pressed("shift"):
 			playerState = states.running
 		else:
 			playerState = states.walking
 	else:
 		playerState = states.idle
+	
+	if !is_equal_approx(velocity.y, 0):
+		if velocity.y > 0:
+			playerState = states.jumping
+		else:
+			playerState = states.falling
 
+#TODO: when in the air, make movement acceleration based
 func move(delta):
 	velocity.x = inputDirection.x * currentSpeed * delta * 100
 	velocity.z = inputDirection.z * currentSpeed * delta * 100
-	velocity.y -= 9.81 * delta
 	
-	if(velocity.y < -1):
+	if !is_on_floor():
+		velocity.y -= 9.81 * delta
+	elif inputDirection.y != 0:
+		velocity.y = jumpForce
+	else:
+		velocity.y = 0
+	
+	if velocity.y < -1:
 		playerState = states.falling
 	
-	if is_on_floor():
-		velocity.y = 0
+	print(states.find_key(playerState))
 	
 	move_and_slide()
 
@@ -130,7 +153,7 @@ func handleAnimations():
 				$sprites.play("idleUpRight")
 			Vector3(-1, 0, -1):
 				$sprites.play("idleUpLeft")
-	elif playerState == states.falling:
+	elif playerState in [states.jumping, states.falling]:
 		match direction:
 			Vector3(1, 0, 0):
 				$sprites.play("idleRight")
