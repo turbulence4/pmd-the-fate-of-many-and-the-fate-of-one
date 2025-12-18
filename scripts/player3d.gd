@@ -7,12 +7,21 @@ var player = Pokemon.new()
 @export var playerSpecies: Resource
 const tileSize = Vector2(24, 24)
 
-@export var walkSpeed = 2
-@export var runSpeed = 5
+@export var acceleration = 2
+@export var airAcceleration = 0.1
+@export var maxWalkSpeed = 3
+@export var maxRunSpeed = 6
 @export var jumpForce = 4
-var currentSpeed = walkSpeed
-var walkDiag = walkSpeed / sqrt(2)
-var runDiag = runSpeed / sqrt(2)
+
+@export var floorFriction = 1.2
+@export var airFriction = 1.1
+var currentFriction = floorFriction
+
+var currentAcceleration = acceleration
+var currentMaxSpeed = maxWalkSpeed
+var accelerationDiag = acceleration / sqrt(2)
+var maxWalkSpeedDiag = maxWalkSpeed / sqrt(2)
+var maxRunSpeedDiag = maxRunSpeed / sqrt(2)
 
 var inputDirection = Vector3.ZERO
 var direction = Vector3(0, 0, 1)
@@ -50,9 +59,11 @@ func _process(_delta: float) -> void:
 	handleAnimations()
 	
 	if playerState == states.running:
-		currentSpeed = runSpeed
+		currentAcceleration = acceleration
+		currentMaxSpeed = maxRunSpeed
 	elif playerState == states.walking:
-		currentSpeed = walkSpeed
+		currentAcceleration = acceleration
+		currentMaxSpeed = maxWalkSpeed
 
 func _physics_process(delta: float) -> void:
 	handleMovementInput()
@@ -76,9 +87,10 @@ func handleMovementInput():
 	#prevent speeding up when diagonal
 	if inputDirection.x != 0 and inputDirection.z != 0:
 		if playerState == states.walking:
-			currentSpeed = walkDiag
+			currentMaxSpeed = maxWalkSpeedDiag
 		elif playerState == states.running:
-			currentSpeed = runDiag
+			currentMaxSpeed = maxRunSpeedDiag
+		currentAcceleration = accelerationDiag
 	
 	#state handling
 	if inputDirection.x != 0 or inputDirection.z != 0:
@@ -88,17 +100,35 @@ func handleMovementInput():
 			playerState = states.walking
 	else:
 		playerState = states.idle
-	
 	if !is_equal_approx(velocity.y, 0):
 		if velocity.y > 0:
 			playerState = states.jumping
 		else:
 			playerState = states.falling
 
-#TODO: when in the air, make movement acceleration based
 func move(delta):
-	velocity.x = inputDirection.x * currentSpeed * delta * 100
-	velocity.z = inputDirection.z * currentSpeed * delta * 100
+	#changing acceleration and fiction values based on whether or not the player is in the air
+	if is_on_floor():
+		currentFriction = floorFriction
+		currentAcceleration = acceleration
+	else:
+		currentFriction = airFriction
+		currentAcceleration = airAcceleration
+	
+	velocity.x += inputDirection.x * currentAcceleration * delta * 100
+	velocity.z += inputDirection.z * currentAcceleration * delta * 100
+	velocity.x = clampf(velocity.x, -currentMaxSpeed, currentMaxSpeed)
+	velocity.z = clampf(velocity.z, -currentMaxSpeed, currentMaxSpeed)
+	
+	if inputDirection.x == 0:
+		velocity.x *= 1.0 / currentFriction
+	if inputDirection.z == 0:
+		velocity.z *= 1.0 / currentFriction
+	
+	if is_equal_approx(velocity.x, 0):
+		velocity.x = 0
+	if is_equal_approx(velocity.z, 0):
+		velocity.z = 0
 	
 	if !is_on_floor():
 		velocity.y -= 9.81 * delta
@@ -109,8 +139,6 @@ func move(delta):
 	
 	if velocity.y < -1:
 		playerState = states.falling
-	
-	print(states.find_key(playerState))
 	
 	move_and_slide()
 
