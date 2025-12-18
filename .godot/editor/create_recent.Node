@@ -1,5 +1,6 @@
-RayCast3D
 Node3D
+SpringArm3D
+RayCast3D
 CollisionShape3D
 Sprite3D
 Camera3D
@@ -11,5 +12,3 @@ AnimationTree
 RayCast2D
 Sprite2D
 CollisionShape2D
-AnimatedSprite2D
-CharacterBody2D
