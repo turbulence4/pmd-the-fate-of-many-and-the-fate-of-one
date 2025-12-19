@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dlouulojuft7"]
 
-[ext_resource type="Script" uid="uid://cvy5ovpeld0m8" path="res://scripts/player.gd" id="1_rp718"]
+[ext_resource type="Script" uid="uid://cvy5ovpeld0m8" path="res://scripts/player2d.gd" id="1_rp718"]
 [ext_resource type="Resource" uid="uid://cd8v06rbvry08" path="res://data/pokemon/piplup.tres" id="2_dyp2m"]
 [ext_resource type="SpriteFrames" uid="uid://bjfpvm3spiheb" path="res://data/sprites/piplup.tres" id="2_yewv4"]
 [ext_resource type="Texture2D" uid="uid://de0j1nn7kvlj2" path="res://assets/sprites/misc/shadowEven.png" id="3_76oj4"]

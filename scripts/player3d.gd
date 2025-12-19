@@ -17,6 +17,13 @@ const tileSize = Vector2(24, 24)
 @export var airFriction = 1.1
 var currentFriction = floorFriction
 
+@export var mouseSens = 0.003
+@export_range(-90, 0, 0.1, "radians_as_degrees") var maxAngle = 0
+@export_range(-90, 0, 0.1, "radians_as_degrees") var minAngle = -4 * PI/9
+@export_range(-90, 0, 0.1, "radians_as_degrees") var defaultAngle = -PI/12
+@export var isCameraActive := true
+@export var cameraSpeed = 0.15
+
 var currentAcceleration = acceleration
 var currentMaxSpeed = maxWalkSpeed
 var accelerationDiag = acceleration / sqrt(2)
@@ -26,6 +33,7 @@ var maxRunSpeedDiag = maxRunSpeed / sqrt(2)
 var inputDirection = Vector3.ZERO
 var direction = Vector3(0, 0, 1)
 var cameraInput = Vector2.ZERO
+@onready var cameraTarget = $cameraManager/cameraTarget
 
 enum states {idle, walking, running, jumping, falling}
 var playerState: states = states.idle
@@ -44,6 +52,14 @@ func setup():
 	
 	#setup movement
 	playerState = states.idle
+	
+	#setup camera
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	cameraTarget.rotation.x = defaultAngle
+
+func _unhandled_input(event: InputEvent) -> void:
+	if isCameraActive:
+		handleCameraInput(event)
 
 func stateManagement():
 	match playerState:
@@ -64,6 +80,9 @@ func _process(_delta: float) -> void:
 	elif playerState == states.walking:
 		currentAcceleration = acceleration
 		currentMaxSpeed = maxWalkSpeed
+	
+	if Input.is_action_just_pressed("ui_cancel"):
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _physics_process(delta: float) -> void:
 	handleMovementInput()
@@ -71,7 +90,15 @@ func _physics_process(delta: float) -> void:
 	move(delta)
 
 func handleCameraSmooth():
-	$cameraManager.position = lerp($cameraManager.position, position, 0.15)
+	$cameraManager.position = lerp($cameraManager.position, position, cameraSpeed)
+
+func handleCameraInput(event: InputEvent):
+	if event is InputEventMouseMotion:
+		cameraTarget.rotation.y -= event.relative.x * mouseSens
+		cameraTarget.rotation.y = wrapf(cameraTarget.rotation.y, 0.0, TAU)
+		
+		cameraTarget.rotation.x -= event.relative.y * mouseSens
+		cameraTarget.rotation.x = clamp(cameraTarget.rotation.x, minAngle, maxAngle)
 
 func handleMovementInput():
 	#actual input
@@ -83,6 +110,10 @@ func handleMovementInput():
 	if inputDirection.x != 0 or inputDirection.z != 0:
 		direction.x = inputDirection.x
 		direction.z = inputDirection.z
+	
+	#set direction on camera
+	if inputDirection.x != 0 or inputDirection.z != 0:
+		rotation.y = cameraTarget.rotation.y
 	
 	#prevent speeding up when diagonal
 	if inputDirection.x != 0 and inputDirection.z != 0:
@@ -107,7 +138,7 @@ func handleMovementInput():
 			playerState = states.falling
 
 func move(delta):
-	#changing acceleration and fiction values based on whether or not the player is in the air
+	#changing acceleration and friction values based on whether or not the player is in the air
 	if is_on_floor():
 		currentFriction = floorFriction
 		currentAcceleration = acceleration
@@ -119,6 +150,8 @@ func move(delta):
 	velocity.z += inputDirection.z * currentAcceleration * delta * 100
 	velocity.x = clampf(velocity.x, -currentMaxSpeed, currentMaxSpeed)
 	velocity.z = clampf(velocity.z, -currentMaxSpeed, currentMaxSpeed)
+	velocity = velocity.rotated(Vector3(0, 1, 0), rotation.y)
+	
 	
 	if inputDirection.x == 0:
 		velocity.x *= 1.0 / currentFriction

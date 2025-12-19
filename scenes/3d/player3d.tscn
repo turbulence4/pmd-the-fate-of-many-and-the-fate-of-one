@@ -1,16 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://dpghh18ufkaiw"]
+[gd_scene load_steps=6 format=3 uid="uid://dpghh18ufkaiw"]
 
 [ext_resource type="Script" uid="uid://b28bs6tmgldy8" path="res://scripts/player3d.gd" id="1_v6qrj"]
 [ext_resource type="Resource" uid="uid://c24byl23j0is1" path="res://data/pokemon/mudkip.tres" id="2_0gpld"]
 [ext_resource type="SpriteFrames" uid="uid://qjvo1cg7whwr" path="res://data/sprites/mudkip.tres" id="3_dc2ju"]
 [ext_resource type="Texture2D" uid="uid://dthvf2ph4ymem" path="res://assets/sprites/misc/shadowOdd.png" id="4_xpl80"]
-[ext_resource type="Script" uid="uid://ddc8t26lwv5wl" path="res://scripts/camera.gd" id="5_dt1nu"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_dc2ju"]
 
 [node name="Player3d" type="CharacterBody3D"]
 script = ExtResource("1_v6qrj")
 playerSpecies = ExtResource("2_0gpld")
+isCameraActive = false
 
 [node name="collider" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
@@ -42,7 +42,6 @@ top_level = true
 
 [node name="cameraTarget" type="Node3D" parent="cameraManager"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0)
-script = ExtResource("5_dt1nu")
 
 [node name="camera" type="Camera3D" parent="cameraManager/cameraTarget"]
 transform = Transform3D(1, 0, 0, 0, 0.9999998, 0, 0, 0, 0.9999998, 0, 1, 3)
