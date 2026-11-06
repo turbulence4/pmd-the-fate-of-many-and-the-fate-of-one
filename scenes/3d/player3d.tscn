@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dpghh18ufkaiw"]
+[gd_scene format=3 uid="uid://dpghh18ufkaiw"]
 
 [ext_resource type="Script" uid="uid://b28bs6tmgldy8" path="res://scripts/player3d.gd" id="1_v6qrj"]
 [ext_resource type="Resource" uid="uid://c24byl23j0is1" path="res://data/pokemon/mudkip.tres" id="2_0gpld"]
@@ -7,18 +7,18 @@
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_dc2ju"]
 
-[node name="Player3d" type="CharacterBody3D"]
+[node name="Player3d" type="CharacterBody3D" unique_id=2120703004]
 script = ExtResource("1_v6qrj")
 playerSpecies = ExtResource("2_0gpld")
-isCameraActive = false
+minAngle = -1.2217304763960306
 
-[node name="collider" type="CollisionShape3D" parent="."]
+[node name="collider" type="CollisionShape3D" parent="." unique_id=749150561]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
 shape = SubResource("SphereShape3D_dc2ju")
 
-[node name="raycast" type="RayCast3D" parent="."]
+[node name="raycast" type="RayCast3D" parent="." unique_id=657342712]
 
-[node name="sprites" type="AnimatedSprite3D" parent="."]
+[node name="sprites" type="AnimatedSprite3D" parent="." unique_id=1199943927]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 offset = Vector2(0.5, 9)
 modulate = Color(0.8352941, 0.8352941, 0.8352941, 1)
@@ -29,19 +29,19 @@ render_priority = 1
 sprite_frames = ExtResource("3_dc2ju")
 animation = &"idleDownLeft"
 
-[node name="shadow" type="Sprite3D" parent="."]
+[node name="shadow" type="Sprite3D" parent="." unique_id=315746653]
 pixel_size = 0.05
 axis = 1
 billboard = 2
 texture_filter = 0
 texture = ExtResource("4_xpl80")
 
-[node name="cameraManager" type="Node3D" parent="."]
+[node name="cameraManager" type="Node3D" parent="." unique_id=1892368746]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
 top_level = true
 
-[node name="cameraTarget" type="Node3D" parent="cameraManager"]
+[node name="cameraTarget" type="Node3D" parent="cameraManager" unique_id=160556550]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0)
 
-[node name="camera" type="Camera3D" parent="cameraManager/cameraTarget"]
+[node name="camera" type="Camera3D" parent="cameraManager/cameraTarget" unique_id=746451137]
 transform = Transform3D(1, 0, 0, 0, 0.9999998, 0, 0, 0, 0.9999998, 0, 1, 3)

@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=99 format=3 uid="uid://qjvo1cg7whwr"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://qjvo1cg7whwr"]
 
 [ext_resource type="Texture2D" uid="uid://co8yqsqmwu8o" path="res://assets/sprites/pokemon/mudkip/Idle-Anim.png" id="1_dp62f"]
 [ext_resource type="Texture2D" uid="uid://cuauj0ocjarja" path="res://assets/sprites/pokemon/mudkip/Walk-Anim.png" id="2_5qj4s"]

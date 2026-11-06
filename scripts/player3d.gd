@@ -18,17 +18,18 @@ const tileSize = Vector2(24, 24)
 var currentFriction = floorFriction
 
 @export var mouseSens = 0.003
-@export_range(-90, 0, 0.1, "radians_as_degrees") var maxAngle = 0
-@export_range(-90, 0, 0.1, "radians_as_degrees") var minAngle = -4 * PI/9
+@export_range(-90, 0, 0.1, "radians_as_degrees") var maxAngle = 0 #bottom
+@export_range(-90, 0, 0.1, "radians_as_degrees") var minAngle = -4 * PI/9 #top
 @export_range(-90, 0, 0.1, "radians_as_degrees") var defaultAngle = -PI/12
 @export var isCameraActive := true
+@export var isCameraSmoothed := false
 @export var cameraSpeed = 0.15
 
 var currentAcceleration = acceleration
 var currentMaxSpeed = maxWalkSpeed
-var accelerationDiag = acceleration / sqrt(2)
-var maxWalkSpeedDiag = maxWalkSpeed / sqrt(2)
-var maxRunSpeedDiag = maxRunSpeed / sqrt(2)
+var accelerationDiag = acceleration
+var maxWalkSpeedDiag = maxWalkSpeed
+var maxRunSpeedDiag = maxRunSpeed
 
 var inputDirection = Vector3.ZERO
 var direction = Vector3(0, 0, 1)
@@ -89,8 +90,12 @@ func _physics_process(delta: float) -> void:
 	handleCameraSmooth()
 	move(delta)
 
+#TODO: make this not apply to rotation somehow
 func handleCameraSmooth():
-	$cameraManager.position = lerp($cameraManager.position, position, cameraSpeed)
+	if isCameraSmoothed:
+		$cameraManager.position = lerp($cameraManager.position, position, cameraSpeed)
+	else:
+		$cameraManager.position = position
 
 func handleCameraInput(event: InputEvent):
 	if event is InputEventMouseMotion:
@@ -146,12 +151,17 @@ func move(delta):
 		currentFriction = airFriction
 		currentAcceleration = airAcceleration
 	
-	velocity.x += inputDirection.x * currentAcceleration * delta * 100
-	velocity.z += inputDirection.z * currentAcceleration * delta * 100
-	velocity.x = clampf(velocity.x, -currentMaxSpeed, currentMaxSpeed)
-	velocity.z = clampf(velocity.z, -currentMaxSpeed, currentMaxSpeed)
-	velocity = velocity.rotated(Vector3(0, 1, 0), rotation.y)
+	var accelerationVector = Vector3(inputDirection.x * currentAcceleration * delta * 100, 0, inputDirection.z * currentAcceleration * delta * 100)
+	accelerationVector = accelerationVector.rotated(Vector3(0, 1, 0), rotation.y)
 	
+	#print(accelerationVector, velocity)
+	
+	velocity += accelerationVector
+	var horizontal := Vector3(velocity.x, 0, velocity.z)
+	if horizontal.length() > currentMaxSpeed:
+		horizontal = horizontal.normalized() * currentMaxSpeed
+		velocity.x = horizontal.x
+		velocity.z = horizontal.z
 	
 	if inputDirection.x == 0:
 		velocity.x *= 1.0 / currentFriction
