@@ -9,12 +9,12 @@ const tileSize = Vector2(24, 24)
 
 @export var acceleration = 2
 @export var airAcceleration = 0.1
-@export var maxWalkSpeed = 3
-@export var maxRunSpeed = 6
+@export var maxWalkSpeed = 3.0
+@export var maxRunSpeed = 6.0
 @export var jumpForce = 4
 
-@export var floorFriction = 1.2
-@export var airFriction = 1.1
+@export var floorFriction = 12
+@export var airFriction = 4
 var currentFriction = floorFriction
 
 @export var mouseSens = 0.003
@@ -23,7 +23,7 @@ var currentFriction = floorFriction
 @export_range(-90, 0, 0.1, "radians_as_degrees") var defaultAngle = -PI/12
 @export var isCameraActive := true
 @export var isCameraSmoothed := false
-@export var cameraSpeed = 0.15
+@export var cameraSpeed := 0.15
 
 var currentAcceleration = acceleration
 var currentMaxSpeed = maxWalkSpeed
@@ -40,9 +40,6 @@ enum states {idle, walking, running, jumping, falling}
 var playerState: states = states.idle
 
 func _ready():
-	setup()
-
-func setup():
 	#setup assets
 	player.species = playerSpecies
 	player.hp = player.species.maxHp
@@ -51,7 +48,7 @@ func setup():
 	$shadow.texture = player.species.shadow
 	$shadow.offset = player.species.shadowOffset
 	
-	#setup movement
+	#setup movement state
 	playerState = states.idle
 	
 	#setup camera
@@ -69,11 +66,7 @@ func stateManagement():
 		states.walking:
 			$sprites.speed_scale = 1
 		states.running:
-			$sprites.speed_scale = 2
-
-func _process(_delta: float) -> void:
-	stateManagement()
-	handleAnimations()
+			$sprites.speed_scale = maxRunSpeed / maxWalkSpeed
 	
 	if playerState == states.running:
 		currentAcceleration = acceleration
@@ -81,17 +74,21 @@ func _process(_delta: float) -> void:
 	elif playerState == states.walking:
 		currentAcceleration = acceleration
 		currentMaxSpeed = maxWalkSpeed
+
+func _process(_delta: float) -> void:
+	stateManagement()
+	handleAnimations()
 	
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _physics_process(delta: float) -> void:
 	handleMovementInput()
-	handleCameraSmooth()
+	smoothCamera()
 	move(delta)
 
 #TODO: make this not apply to rotation somehow
-func handleCameraSmooth():
+func smoothCamera():
 	if isCameraSmoothed:
 		$cameraManager.position = lerp($cameraManager.position, position, cameraSpeed)
 	else:
@@ -136,6 +133,7 @@ func handleMovementInput():
 			playerState = states.walking
 	else:
 		playerState = states.idle
+		
 	if !is_equal_approx(velocity.y, 0):
 		if velocity.y > 0:
 			playerState = states.jumping
@@ -153,20 +151,20 @@ func move(delta):
 	
 	var accelerationVector = Vector3(inputDirection.x * currentAcceleration * delta * 100, 0, inputDirection.z * currentAcceleration * delta * 100)
 	accelerationVector = accelerationVector.rotated(Vector3(0, 1, 0), rotation.y)
-	
-	#print(accelerationVector, velocity)
-	
 	velocity += accelerationVector
+	
 	var horizontal := Vector3(velocity.x, 0, velocity.z)
 	if horizontal.length() > currentMaxSpeed:
 		horizontal = horizontal.normalized() * currentMaxSpeed
 		velocity.x = horizontal.x
 		velocity.z = horizontal.z
 	
-	if inputDirection.x == 0:
-		velocity.x *= 1.0 / currentFriction
-	if inputDirection.z == 0:
-		velocity.z *= 1.0 / currentFriction
+	#friction
+	if inputDirection == Vector3.ZERO:
+		var horizontalForFric = Vector3(velocity.x, 0, velocity.z)
+		horizontalForFric = horizontalForFric.move_toward(Vector3.ZERO, currentFriction * delta)
+		velocity.x = horizontalForFric.x
+		velocity.z = horizontalForFric.z
 	
 	if is_equal_approx(velocity.x, 0):
 		velocity.x = 0
@@ -187,6 +185,7 @@ func move(delta):
 
 #IMSTUPID: maybe convert this to an animation tree at some point
 #wow this is fucking awful
+#november update: wow i still can't believe i ever thought doing it like this was a good idea
 func handleAnimations():
 	if playerState in [states.walking, states.running]:
 		match inputDirection:

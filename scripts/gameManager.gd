@@ -14,7 +14,7 @@ func setup():
 	var speciesMudkip = preload("res://data/pokemon/mudkip.tres")
 	
 	var player = Pokemon.new()
-	player.species = speciesPiplup
+	player.species = speciesMudkip
 	player.hp = player.species.maxHp
 	gameState.player = player
 	
