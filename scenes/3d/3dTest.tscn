@@ -29,7 +29,8 @@ uv1_scale = Vector3(10, 10, 10)
 environment = SubResource("Environment_f0fbi")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2032875370]
-transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+transform = Transform3D(-0.8895286, -0.4567911, -0.0090051005, -0.026380911, 0.031675562, 0.99915, -0.45611754, 0.8890099, -0.04022688, 0, 13.777508, 0)
+light_energy = 0.5
 shadow_enabled = true
 
 [node name="ramp" type="CSGBox3D" parent="." unique_id=83654073]

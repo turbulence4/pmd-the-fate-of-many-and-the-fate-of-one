@@ -8,13 +8,13 @@ var player = Pokemon.new()
 const tileSize = Vector2(24, 24)
 
 @export var acceleration = 2
-@export var airAcceleration = 0.1
+@export var airAcceleration = 0.2
 @export var maxWalkSpeed = 3.0
 @export var maxRunSpeed = 6.0
 @export var jumpForce = 4
 
-@export var floorFriction = 12
-@export var airFriction = 4
+@export var floorFriction = 0.24
+@export var airFriction = 0.04
 var currentFriction = floorFriction
 
 @export var mouseSens = 0.003
@@ -148,8 +148,8 @@ func move(delta):
 	else:
 		currentFriction = airFriction
 		currentAcceleration = airAcceleration
-	
-	var accelerationVector = Vector3(inputDirection.x * currentAcceleration * delta * 100, 0, inputDirection.z * currentAcceleration * delta * 100)
+	#* delta * 100
+	var accelerationVector = Vector3(inputDirection.x * currentAcceleration, 0, inputDirection.z * currentAcceleration)
 	accelerationVector = accelerationVector.rotated(Vector3(0, 1, 0), rotation.y)
 	velocity += accelerationVector
 	
@@ -162,7 +162,7 @@ func move(delta):
 	#friction
 	if inputDirection == Vector3.ZERO:
 		var horizontalForFric = Vector3(velocity.x, 0, velocity.z)
-		horizontalForFric = horizontalForFric.move_toward(Vector3.ZERO, currentFriction * delta)
+		horizontalForFric = horizontalForFric.move_toward(Vector3.ZERO, currentFriction)
 		velocity.x = horizontalForFric.x
 		velocity.z = horizontalForFric.z
 	

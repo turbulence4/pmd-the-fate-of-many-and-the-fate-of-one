@@ -24,8 +24,9 @@ offset = Vector2(0.5, 9)
 modulate = Color(0.8352941, 0.8352941, 0.8352941, 1)
 pixel_size = 0.05
 billboard = 1
+shaded = true
 texture_filter = 0
-render_priority = 1
+render_priority = 5
 sprite_frames = ExtResource("3_dc2ju")
 animation = &"idleDownLeft"
 
@@ -33,6 +34,7 @@ animation = &"idleDownLeft"
 pixel_size = 0.05
 axis = 1
 billboard = 2
+shaded = true
 texture_filter = 0
 texture = ExtResource("4_xpl80")
 
