@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b28bs6tmgldy8" path="res://scripts/player3d.gd" id="1_v6qrj"]
 [ext_resource type="Resource" uid="uid://c24byl23j0is1" path="res://data/pokemon/mudkip.tres" id="2_0gpld"]
 [ext_resource type="SpriteFrames" uid="uid://qjvo1cg7whwr" path="res://data/sprites/mudkip.tres" id="3_dc2ju"]
+[ext_resource type="Script" uid="uid://bbm82lbheolv0" path="res://scripts/animXmlParser.gd" id="4_dt1nu"]
 [ext_resource type="Texture2D" uid="uid://dthvf2ph4ymem" path="res://assets/sprites/misc/shadowOdd.png" id="4_xpl80"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_dc2ju"]
@@ -29,6 +30,7 @@ texture_filter = 0
 render_priority = 5
 sprite_frames = ExtResource("3_dc2ju")
 animation = &"idleDownLeft"
+script = ExtResource("4_dt1nu")
 
 [node name="shadow" type="Sprite3D" parent="." unique_id=315746653]
 pixel_size = 0.05

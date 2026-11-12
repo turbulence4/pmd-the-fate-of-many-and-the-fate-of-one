@@ -1,7 +1,4 @@
 res://scenes/3d/player3d.tscn
 res://data/sprites/mudkip.tres
 res://data/sprites/piplup.tres
-res://shaders/constantShading.gdshader
-res://shaders/player3d.gdshader
-res://scenes/3d/3dTest.tscn
-res://scripts/player3d.gd
+res://scripts/animXmlParser.gd
