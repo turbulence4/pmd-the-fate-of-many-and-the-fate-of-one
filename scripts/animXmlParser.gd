@@ -45,12 +45,48 @@ func _ready() -> void:
 			curAttributesDict.clear()
 			curCopyOf = ""
 	
-	#handle copyof
 	for i in animDict.keys():
+		#handle copyof
 		if animDict[i]["copyOf"] != "":
 			animDict[i]["durations"] = animDict[animDict[i]["copyOf"]]["durations"]
 	
-	print(animDict)
+		#assign direction type
+		if i in ["Sleep", "Eat", "Pull", "DeepBreath", "Sit", "LookUp", "Sink", "LeapForth", "Head",
+				 "Cringe", "LostBalance", "TumbleBack", "HitGround", "Eat", "Tumble"]:
+			animDict[i]["dirVariantType"] = "noVariants"
+		if i in ["EventSleep", "Wake", "Float", "Trip", "Laying", "Faint", "Pain"]:
+			animDict[i]["dirVariantType"] = "twoDirLR"
+		if i == "Pose":
+			animDict[i]["dirVariantType"] = "twoDirUD"
+		if i == "Nod":
+			animDict[i]["dirVariantType"] = "fourDir"
+		if i in ["Walk", "Attack", "Strike", "SpAttack", "Appeal", "Hurt", "Idle", "Swing", "Double", "Hop",
+				 "Charge", "Shoot", "Rotate"]:
+			animDict[i]["dirVariantType"] = "eightDir"
+	
+	#make spriteframes
+	var spriteFrames := SpriteFrames.new()
+	spriteFrames.remove_animation("default")
+	
+	for i in animDict.keys():
+		match animDict[i]["dirVariantType"]:
+			#everything is in one long row. in a for loop of length durations.size, make a frame with
+			#framewidth and frameheight, then move over framewidth and make another one
+			"noVariants":
+				spriteFrames.add_animation(i)
+				
+				var spritesheet := load("res://assets/sprites/pokemon/snivy/" + i + "-Anim.png")
+				var curFrameImg := AtlasTexture.new()
+				curFrameImg.atlas = spritesheet
+				
+				#find some way to remove offset/blank space for some sprites
+				for j in animDict[i]["durations"].size():
+					curFrameImg.region = Rect2(j * animDict[i]["frameWidth"], 0, animDict[i]["frameWidth"], animDict[i]["frameHeight"])
+					spriteFrames.add_frame(i, curFrameImg, animDict[i]["durations"][j], -1)
+	
+	ResourceSaver.save(spriteFrames, "res://data/pokemon/snivy.tres")
+	
+	#print(animDict)
 
 func exampleSpriteFrames():
 	var sprite_frames := SpriteFrames.new()

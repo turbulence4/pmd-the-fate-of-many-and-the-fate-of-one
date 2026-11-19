@@ -21,7 +21,7 @@ volumetric_fog_length = 4.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nlcy2"]
 albedo_texture = ExtResource("1_f0fbi")
-uv1_scale = Vector3(10, 10, 10)
+uv1_triplanar = true
 
 [node name="3dTest" type="Node3D" unique_id=1304083976]
 
@@ -33,21 +33,89 @@ transform = Transform3D(-0.8895286, -0.4567911, -0.0090051005, -0.026380911, 0.0
 light_energy = 0.5
 shadow_enabled = true
 
-[node name="ramp" type="CSGBox3D" parent="." unique_id=83654073]
-transform = Transform3D(2.9802322e-08, -0.258819, -0.9659257, 3.8567043e-09, 0.9659259, -0.25881904, 1, -1.4901161e-08, -4.4703484e-08, 8, 0.7, 0)
+[node name="env" type="Node3D" parent="." unique_id=1653594255]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47160912, 0.28941154, 9.705331)
+
+[node name="ramp" type="CSGBox3D" parent="env" unique_id=83654073]
+transform = Transform3D(2.9802322e-08, -0.258819, -0.9659257, 3.8567043e-09, 0.9659259, -0.25881904, 1, -1.4901161e-08, -4.4703484e-08, 8.471609, 0.41058844, -9.705331)
 use_collision = true
 size = Vector3(2, 0.3, 8)
 
-[node name="floor" type="CSGBox3D" parent="." unique_id=277846331]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0)
+[node name="floor" type="CSGBox3D" parent="env" unique_id=277846331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47160912, -0.43941155, -9.705331)
 material_override = SubResource("StandardMaterial3D_nlcy2")
 use_collision = true
-size = Vector3(16, 0.3, 16)
+size = Vector3(40, 0.3, 40)
 
-[node name="cielign" type="CSGBox3D" parent="." unique_id=308466778]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, -8.188185)
+[node name="ceiling" type="CSGBox3D" parent="env" unique_id=308466778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42616272, 3.4603198, -17.83733)
 use_collision = true
 size = Vector3(7, 0.3, 6)
+
+[node name="this was jack\'s doing" type="CSGBox3D" parent="env" unique_id=1354040133]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.023849)
+use_collision = true
+size = Vector3(3, 0.3, 3)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing" unique_id=1922766583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2160945, 0.12004423, 3.7459173)
+use_collision = true
+size = Vector3(2.3686523, 0.3, 2.9935913)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign" unique_id=793488744]
+transform = Transform3D(2.304933, 0, 0, 0, 2.304933, 0, 0, 0, 1, 0.7913755, -0.08716285, 0.84687805)
+use_collision = true
+size = Vector3(0.18469238, 0.3, 0.3840027)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign" unique_id=1229072340]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7217545, 0.12004423, -0.018862724)
+use_collision = true
+size = Vector3(0.18469238, 0.3, 0.3840027)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign" unique_id=618816037]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0057539344, 0.9898076, -0.025488853)
+use_collision = true
+size = Vector3(0.09036255, 2.0395265, 0.27581024)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign" unique_id=252520946]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7068988, -0.044874907, 0.032855034)
+use_collision = true
+size = Vector3(0.09036255, 2.0395265, 0.27581024)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign" unique_id=2029644541]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33751976, 0.98585844, -0.009032249)
+use_collision = true
+size = Vector3(0.9923172, 0.17503667, 0.3595848)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign/cielign" unique_id=358169366]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.031696916, -1.9632707, -0.010105133)
+use_collision = true
+size = Vector3(0.7611246, 0.20079958, 0.221488)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign/cielign/cielign" unique_id=1624131240]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.031696916, 0.7613718, -0.009420395)
+use_collision = true
+size = Vector3(0.7611246, 0.20079958, 0.220119)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign" unique_id=2055086713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.245424, -0.098912776, -0.009420395)
+use_collision = true
+size = Vector3(0.20688272, 0.20079958, 0.220119)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign" unique_id=1888398230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18232661, 1.1594837, 0.013448715)
+use_collision = true
+size = Vector3(0.6859609, 0.41485292, 0.058020473)
+
+[node name="cielign" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign" unique_id=1318752388]
+transform = Transform3D(0.9900213, -0.14091787, 0, 0.14091787, 0.9900213, 0, 0, 0, 1, -0.009906232, -0.2681284, -0.06280422)
+use_collision = true
+size = Vector3(0.6859609, 0.41485292, 0.058020473)
+
+[node name="ceiling" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign" unique_id=2057735663]
+transform = Transform3D(0.4295227, 0.0611375, 0, -0.0611375, 0.4295227, 0, 0, 0, 1, -0.039286613, -0.7911234, 0.699625)
+use_collision = true
+size = Vector3(2, 4, 0.2680664)
 
 [node name="Player3d" parent="." unique_id=1780061865 instance=ExtResource("1_664v3")]
 minAngle = -1.3962634015954636
