@@ -112,10 +112,5 @@ transform = Transform3D(0.9900213, -0.14091787, 0, 0.14091787, 0.9900213, 0, 0, 
 use_collision = true
 size = Vector3(0.6859609, 0.41485292, 0.058020473)
 
-[node name="ceiling" type="CSGBox3D" parent="env/this was jack\'s doing/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign/cielign" unique_id=2057735663]
-transform = Transform3D(0.4295227, 0.0611375, 0, -0.0611375, 0.4295227, 0, 0, 0, 1, -0.039286613, -0.7911234, 0.699625)
-use_collision = true
-size = Vector3(2, 4, 0.2680664)
-
 [node name="Player3d" parent="." unique_id=1780061865 instance=ExtResource("1_664v3")]
 minAngle = -1.3962634015954636

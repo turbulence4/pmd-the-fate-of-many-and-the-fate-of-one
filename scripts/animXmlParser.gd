@@ -12,6 +12,7 @@ func _ready() -> void:
 	var curAnimFrameHeight := 0
 	var curItem := ""
 	var curCopyOf := ""
+	var fps := 24
 	
 	while parser.read() != Error.ERR_FILE_EOF:
 		if parser.get_node_type() in [XMLParser.NODE_ELEMENT, XMLParser.NODE_ELEMENT_END]:
@@ -51,9 +52,11 @@ func _ready() -> void:
 			animDict[i]["durations"] = animDict[animDict[i]["copyOf"]]["durations"]
 	
 		#assign direction type
-		if i in ["Sleep", "Eat", "Pull", "DeepBreath", "Sit", "LookUp", "Sink", "LeapForth", "Head",
-				 "Cringe", "LostBalance", "TumbleBack", "HitGround", "Eat", "Tumble"]:
-			animDict[i]["dirVariantType"] = "noVariants"
+		if i in ["Sleep", "Eat", "Pull", "DeepBreath", "Sit", "LookUp", "Sink", "LeapForth",
+				 "Cringe", "LostBalance", "TumbleBack", "HitGround", "Tumble"]:
+			animDict[i]["dirVariantType"] = "noVariantsHorizontal"
+		if i == "Head":
+			animDict[i]["dirVariantType"] = "noVariantsVertical"
 		if i in ["EventSleep", "Wake", "Float", "Trip", "Laying", "Faint", "Pain"]:
 			animDict[i]["dirVariantType"] = "twoDirLR"
 		if i == "Pose":
@@ -69,44 +72,41 @@ func _ready() -> void:
 	spriteFrames.remove_animation("default")
 	
 	for i in animDict.keys():
+		var spritesheet: CompressedTexture2D
+		
+		if animDict[i]["copyOf"] == "":
+			spritesheet = load("res://assets/sprites/pokemon/snivy/" + i + "-Anim.png")
+		else:
+			spritesheet = load("res://assets/sprites/pokemon/snivy/" + animDict[i]["copyOf"] + "-Anim.png")
+		
 		match animDict[i]["dirVariantType"]:
-			#everything is in one long row. in a for loop of length durations.size, make a frame with
-			#framewidth and frameheight, then move over framewidth and make another one
-			"noVariants":
+			"noVariantsHorizontal":
 				spriteFrames.add_animation(i)
+				spriteFrames.set_animation_loop_mode(i, SpriteFrames.LOOP_LINEAR)
+				spriteFrames.set_animation_speed(i, fps)
 				
-				var spritesheet := load("res://assets/sprites/pokemon/snivy/" + i + "-Anim.png")
-				var curFrameImg := AtlasTexture.new()
-				curFrameImg.atlas = spritesheet
-				
-				#find some way to remove offset/blank space for some sprites
-				for j in animDict[i]["durations"].size():
+				for j in spritesheet.get_width() / animDict[i]["frameWidth"]:
+					var curFrameImg := AtlasTexture.new()
+					curFrameImg.atlas = spritesheet
 					curFrameImg.region = Rect2(j * animDict[i]["frameWidth"], 0, animDict[i]["frameWidth"], animDict[i]["frameHeight"])
-					spriteFrames.add_frame(i, curFrameImg, animDict[i]["durations"][j], -1)
+					spriteFrames.add_frame(i, curFrameImg, animDict[i]["durations"][j % animDict[i]["durations"].size()], j)
+			"noVariantsVertical":
+				spriteFrames.add_animation(i)
+				spriteFrames.set_animation_loop_mode(i, SpriteFrames.LOOP_LINEAR)
+				spriteFrames.set_animation_speed(i, fps)
+				
+				for j in spritesheet.get_height() / animDict[i]["frameHeight"]:
+					var curFrameImg := AtlasTexture.new()
+					curFrameImg.atlas = spritesheet
+					curFrameImg.region = Rect2(0, j * animDict[i]["frameHeight"], animDict[i]["frameWidth"], animDict[i]["frameHeight"])
+					spriteFrames.add_frame(i, curFrameImg, animDict[i]["durations"][j % animDict[i]["durations"].size()], j)
+			"eightDir":
+				spriteFrames.add_animation(i)
+				spriteFrames.set_animation_loop_mode(i, SpriteFrames.LOOP_LINEAR)
+				spriteFrames.set_animation_speed(i, fps)
+				
+				
 	
 	ResourceSaver.save(spriteFrames, "res://data/pokemon/snivy.tres")
 	
 	#print(animDict)
-
-func exampleSpriteFrames():
-	var sprite_frames := SpriteFrames.new()
-
-	# Remove the default animation.
-	sprite_frames.remove_animation("default")
-	
-	sprite_frames.add_animation("Idle")
-	sprite_frames.add_animation("Walk")
-	sprite_frames.add_animation("Attack")
-	
-	sprite_frames.set_animation_loop("Idle", true)
-	sprite_frames.set_animation_speed("Idle", 10.0)
-	
-	var sprite_sheet := load("res://assets/sprites/pokemon/snivy/Walk-Anim.png")
-
-	var atlas_texture := AtlasTexture.new()
-	atlas_texture.atlas = sprite_sheet
-	atlas_texture.region = Rect2(0, 0, 64, 64)
-
-	sprite_frames.add_frame("Idle", atlas_texture)
-	
-	var error := ResourceSaver.save(sprite_frames, "res://data/pokemon/snivy.tres")

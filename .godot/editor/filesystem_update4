@@ -1,4 +1,5 @@
 res://scenes/3d/3dTest.tscn
 res://data/sprites/mudkip.tres
 res://data/sprites/piplup.tres
+res://data/pokemon/snivy.tres
 res://scripts/animXmlParser.gd
