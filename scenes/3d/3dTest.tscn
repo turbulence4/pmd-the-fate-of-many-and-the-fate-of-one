@@ -113,4 +113,3 @@ use_collision = true
 size = Vector3(0.6859609, 0.41485292, 0.058020473)
 
 [node name="Player3d" parent="." unique_id=1780061865 instance=ExtResource("1_664v3")]
-minAngle = -1.3962634015954636

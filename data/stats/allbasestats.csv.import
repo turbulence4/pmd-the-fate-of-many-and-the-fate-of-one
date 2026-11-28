@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c3o7661ojpkm0"
+
+[deps]
+
+files=["res://data/stats/allbasestats.Name.translation", "res://data/stats/allbasestats.Type.translation", "res://data/stats/allbasestats.Total.translation", "res://data/stats/allbasestats.HP.translation", "res://data/stats/allbasestats.Attack.translation", "res://data/stats/allbasestats.Defense.translation", "res://data/stats/allbasestats.Sp. Atk.translation", "res://data/stats/allbasestats.Sp. Def.translation", "res://data/stats/allbasestats.Speed.translation"]
+
+source_file="res://data/stats/allbasestats.csv"
+dest_files=["res://data/stats/allbasestats.Name.translation", "res://data/stats/allbasestats.Type.translation", "res://data/stats/allbasestats.Total.translation", "res://data/stats/allbasestats.HP.translation", "res://data/stats/allbasestats.Attack.translation", "res://data/stats/allbasestats.Defense.translation", "res://data/stats/allbasestats.Sp. Atk.translation", "res://data/stats/allbasestats.Sp. Def.translation", "res://data/stats/allbasestats.Speed.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

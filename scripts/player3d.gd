@@ -36,13 +36,13 @@ var direction = Vector3(0, 0, 1)
 var cameraInput = Vector2.ZERO
 @onready var cameraTarget = $cameraManager/cameraTarget
 
-enum states {idle, walking, running, jumping, falling}
+enum states {idle, walking, running, jumping, falling, animDebug1, animDebug2, animDebug3}
 var playerState: states = states.idle
 
 func _ready():
 	#setup assets
 	player.species = playerSpecies
-	player.hp = player.species.maxHp
+	player.curHp = player.species.maxHp
 	$sprites.sprite_frames = player.species.spriteFrames
 	$sprites.offset = player.species.spriteOffset
 	$shadow.texture = player.species.shadow
@@ -62,7 +62,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func stateManagement():
 	match playerState:
 		states.idle:
-			$sprites.frame = 0
+			$sprites.speed_scale = 1
 		states.walking:
 			$sprites.speed_scale = 1
 		states.running:
@@ -87,7 +87,6 @@ func _physics_process(delta: float) -> void:
 	smoothCamera()
 	move(delta)
 
-#TODO: make this not apply to rotation somehow
 func smoothCamera():
 	if isCameraSmoothed:
 		$cameraManager.position = lerp($cameraManager.position, position, cameraSpeed)
@@ -139,6 +138,13 @@ func handleMovementInput():
 			playerState = states.jumping
 		else:
 			playerState = states.falling
+	
+	if Input.is_action_pressed("debugAnim1"):
+		playerState = states.animDebug1
+	if Input.is_action_pressed("debugAnim2"):
+		playerState = states.animDebug2
+	if Input.is_action_pressed("debugAnim3"):
+		playerState = states.animDebug3
 
 func move(delta):
 	#changing acceleration and friction values based on whether or not the player is in the air
@@ -190,70 +196,76 @@ func handleAnimations():
 	if playerState in [states.walking, states.running]:
 		match inputDirection:
 			Vector3(1, 0, 0):
-				$sprites.play("walkRight")
+				$sprites.play("WalkRight")
 			Vector3(-1, 0, 0):
-				$sprites.play("walkLeft")
+				$sprites.play("WalkLeft")
 			Vector3(0, 0, 1):
-				$sprites.play("walkDown")
+				$sprites.play("WalkDown")
 			Vector3(0, 0, -1):
-				$sprites.play("walkUp")
+				$sprites.play("WalkUp")
 			Vector3(1, 0, 1):
-				$sprites.play("walkDownRight")
+				$sprites.play("WalkDownRight")
 			Vector3(-1, 0, 1):
-				$sprites.play("walkDownLeft")
+				$sprites.play("WalkDownLeft")
 			Vector3(1, 0, -1):
-				$sprites.play("walkUpRight")
+				$sprites.play("WalkUpRight")
 			Vector3(-1, 0, -1):
-				$sprites.play("walkUpLeft")
+				$sprites.play("WalkUpLeft")
 	elif playerState == states.idle:
 		match direction:
 			Vector3(1, 0, 0):
-				$sprites.play("idleRight")
+				$sprites.play("IdleRight")
 			Vector3(-1, 0, 0):
-				$sprites.play("idleLeft")
+				$sprites.play("IdleLeft")
 			Vector3(0, 0, 1):
-				$sprites.play("idleDown")
+				$sprites.play("IdleDown")
 			Vector3(0, 0, -1):
-				$sprites.play("idleUp")
+				$sprites.play("IdleUp")
 			Vector3(1, 0, 1):
-				$sprites.play("idleDownRight")
+				$sprites.play("IdleDownRight")
 			Vector3(-1, 0, 1):
-				$sprites.play("idleDownLeft")
+				$sprites.play("IdleDownLeft")
 			Vector3(1, 0, -1):
-				$sprites.play("idleUpRight")
+				$sprites.play("IdleUpRight")
 			Vector3(-1, 0, -1):
-				$sprites.play("idleUpLeft")
+				$sprites.play("IdleUpLeft")
 	elif playerState in [states.jumping, states.falling]:
 		match direction:
 			Vector3(1, 0, 0):
-				$sprites.play("idleRight")
+				$sprites.play("WalkRight")
 				$sprites.frame = 2
 				$sprites.pause()
 			Vector3(-1, 0, 0):
-				$sprites.play("idleLeft")
+				$sprites.play("WalkLeft")
 				$sprites.frame = 2
 				$sprites.pause()
 			Vector3(0, 0, 1):
-				$sprites.play("idleDown")
+				$sprites.play("WalkDown")
 				$sprites.frame = 2
 				$sprites.pause()
 			Vector3(0, 0, -1):
-				$sprites.play("idleUp")
+				$sprites.play("WalkUp")
 				$sprites.frame = 2
 				$sprites.pause()
 			Vector3(1, 0, 1):
-				$sprites.play("idleDownRight")
+				$sprites.play("WalkDownRight")
 				$sprites.frame = 2
 				$sprites.pause()
 			Vector3(-1, 0, 1):
-				$sprites.play("idleDownLeft")
+				$sprites.play("WalkDownLeft")
 				$sprites.frame = 2
 				$sprites.pause()
 			Vector3(1, 0, -1):
-				$sprites.play("idleUpRight")
+				$sprites.play("WalkUpRight")
 				$sprites.frame = 2
 				$sprites.pause()
 			Vector3(-1, 0, -1):
-				$sprites.play("idleUpLeft")
+				$sprites.play("WalkUpLeft")
 				$sprites.frame = 2
 				$sprites.pause()
+	elif playerState == states.animDebug1:
+		$sprites.play("AttackLeft")
+	elif playerState == states.animDebug2:
+		$sprites.play("ShootDownRight")
+	elif playerState == states.animDebug3:
+		$sprites.play("HopUp")

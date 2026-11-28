@@ -1,5 +1,7 @@
 res://scenes/3d/3dTest.tscn
 res://data/sprites/mudkip.tres
 res://data/sprites/piplup.tres
-res://data/pokemon/snivy.tres
 res://scripts/animXmlParser.gd
+res://scenes/3d/player3d.tscn
+res://data/pokemon/mudkip.tres
+res://scripts/speciesResource.gd

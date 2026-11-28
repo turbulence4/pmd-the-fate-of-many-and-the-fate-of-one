@@ -2,13 +2,13 @@
 
 [ext_resource type="Script" uid="uid://dtoasstuc07qe" path="res://scripts/speciesResource.gd" id="1_e51ix"]
 [ext_resource type="Texture2D" uid="uid://dthvf2ph4ymem" path="res://assets/sprites/misc/shadowOdd.png" id="2_415uu"]
-[ext_resource type="SpriteFrames" uid="uid://qjvo1cg7whwr" path="res://data/sprites/mudkip.tres" id="3_0en6s"]
+[ext_resource type="SpriteFrames" uid="uid://xxle64f4nqni" path="res://data/sprites/mudkip.tres" id="3_0en6s"]
 
 [resource]
 script = ExtResource("1_e51ix")
 name = "Mudkip"
 maxHp = 21
 spriteFrames = ExtResource("3_0en6s")
-spriteOffset = Vector2(0.5, 8)
+spriteOffset = Vector2(0.5, 6)
 shadow = ExtResource("2_415uu")
 metadata/_custom_type_script = "uid://dtoasstuc07qe"
